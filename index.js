@@ -34,6 +34,11 @@ async function run() {
             res.send(result)
         }) 
 
+        app.get('/coffees', async(req, res)=>{
+            const coffeesData = await coffeesDB.find({}).toArray();
+            res.send(coffeesData)
+        })
+
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
