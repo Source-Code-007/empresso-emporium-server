@@ -61,6 +61,13 @@ async function run() {
             res.send(coffeesData)
         })
 
+        app.delete('/coffee/:id', async(req,res)=>{
+            const uniqueId = req.params.id
+            const query = {_id: new ObjectId(uniqueId)}
+            const result = await coffeesDB.deleteOne(query)
+            res.send(result)
+        })
+
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
