@@ -27,21 +27,36 @@ async function run() {
 
         const coffeesDB = client.db('coffeesDB').collection('coffees')
 
-        app.post('/addCoffee', async(req, res) => {
+        app.post('/addCoffee', async (req, res) => {
             const newCoffee = req.body
             // console.log(newCoffee);
             const result = await coffeesDB.insertOne(newCoffee);
             res.send(result)
-        }) 
+        })
 
-        app.get('/coffee/:id', async(req,res)=>{
+        app.put('/update-coffee/:id', async (req, res) => {
             const uniqueId = req.params.id
-            const query  = {_id: new ObjectId(uniqueId)}
+            const updatedCoffee = req.body
+            const { name, chef, supplier, price, category, details, photo } = updatedCoffee
+            const query = { _id: new ObjectId(uniqueId) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    name, chef, supplier, price, category, details, photo
+                }
+            }
+            const result = await coffeesDB.updateOne(query, updatedDoc, options)
+            res.send(result)
+        })
+
+        app.get('/coffee/:id', async (req, res) => {
+            const uniqueId = req.params.id
+            const query = { _id: new ObjectId(uniqueId) }
             const loadedCoffee = await coffeesDB.findOne(query)
             res.send(loadedCoffee)
         })
 
-        app.get('/coffees', async(req, res)=>{
+        app.get('/coffees', async (req, res) => {
             const coffeesData = await coffeesDB.find({}).toArray();
             res.send(coffeesData)
         })
