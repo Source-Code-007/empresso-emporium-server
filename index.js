@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -29,10 +29,17 @@ async function run() {
 
         app.post('/addCoffee', async(req, res) => {
             const newCoffee = req.body
-            console.log(newCoffee);
+            // console.log(newCoffee);
             const result = await coffeesDB.insertOne(newCoffee);
             res.send(result)
         }) 
+
+        app.get('/coffee/:id', async(req,res)=>{
+            const uniqueId = req.params.id
+            const query  = {_id: new ObjectId(uniqueId)}
+            const loadedCoffee = await coffeesDB.findOne(query)
+            res.send(loadedCoffee)
+        })
 
         app.get('/coffees', async(req, res)=>{
             const coffeesData = await coffeesDB.find({}).toArray();
