@@ -1,4 +1,5 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require("dotenv").config();
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -17,6 +18,7 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
